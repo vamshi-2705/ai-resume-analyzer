@@ -1,12 +1,9 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const Groq = require('groq-sdk');
 
-// Assume we are using Gemini API as provided in the instructions
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key_if_not_set');
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'dummy_key_if_not_set' });
 
 const analyzeResume = async (resumeText) => {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
         const prompt = `
         You are an ATS (Applicant Tracking System) and professional HR recruiter.
         Analyze the following resume text:
@@ -25,13 +22,18 @@ const analyzeResume = async (resumeText) => {
         }
         `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text();
+        const completion = await groq.chat.completions.create({
+            messages: [
+                {
+                    role: "user",
+                    content: prompt,
+                },
+            ],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" },
+        });
 
-        // Clean up markdown markers if Gemini returned them
-        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
+        let text = completion.choices[0].message.content;
         return JSON.parse(text);
     } catch (error) {
         console.error("AI Analysis Error:", error);
@@ -41,8 +43,6 @@ const analyzeResume = async (resumeText) => {
 
 const matchJob = async (resumeSkills, jobDescription) => {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
         const prompt = `
         You are an AI recruitment assistant.
         
@@ -62,12 +62,18 @@ const matchJob = async (resumeSkills, jobDescription) => {
         }
         `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text();
+        const completion = await groq.chat.completions.create({
+            messages: [
+                {
+                    role: "user",
+                    content: prompt,
+                },
+            ],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" },
+        });
 
-        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
+        let text = completion.choices[0].message.content;
         return JSON.parse(text);
     } catch (error) {
         console.error("AI Match Error:", error);
