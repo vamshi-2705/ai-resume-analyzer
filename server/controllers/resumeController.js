@@ -25,8 +25,10 @@ const uploadResume = async (req, res) => {
             return res.status(400).json({ error: 'Could not extract text from the PDF. It might be an image-only PDF.' });
         }
 
+        const { jobDescription } = req.body;
+
         // 2. Call AI Service to analyze
-        const aiAnalysis = await analyzeResume(text);
+        const aiAnalysis = await analyzeResume(text, jobDescription);
 
         // 3. Save resume basic info to DB
         // Since we are not uploading to a real cloud storage like S3 in this setup, 

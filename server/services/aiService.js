@@ -2,19 +2,22 @@ const Groq = require('groq-sdk');
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'dummy_key_if_not_set' });
 
-const analyzeResume = async (resumeText) => {
+const analyzeResume = async (resumeText, jobDescription) => {
     try {
         const prompt = `
         You are an ATS (Applicant Tracking System) and professional HR recruiter.
-        Analyze the following resume text:
+        Analyze the following resume text${jobDescription ? ' with respect to the provided Job Description' : ''}:
         
+        Resume Text:
         ${resumeText}
+        
+        ${jobDescription ? `Job Description:\n${jobDescription}\n` : ''}
         
         Return ONLY in strictly valid JSON format, with no markdown code blocks formatting, containing exactly the following structure:
         {
-          "atsScore": 0-100 number,
+          "atsScore": 0-100 number, // Calculate the ATS score${jobDescription ? ' based on how well the resume matches the Job Description' : ' representing overall resume strength'}
           "extractedSkills": ["skill1", "skill2"],
-          "missingSkills": ["missing_skill1", "missing_skill2"],
+          "missingSkills": ["missing_skill1", "missing_skill2"], // ${jobDescription ? 'Include skills from the Job Description that are missing from the resume' : 'Skills that are typically missing/beneficial for this career path'}
           "improvements": ["suggestion1", "suggestion2"],
           "professionalSummary": "rewritten summary",
           "strengths": ["strength1"],

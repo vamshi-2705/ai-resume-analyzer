@@ -6,6 +6,7 @@ import { UploadCloud, File, CheckCircle, AlertTriangle, Briefcase, Zap, Cpu } fr
 const UserDashboard = () => {
     const { user } = useContext(AuthContext);
     const [file, setFile] = useState(null);
+    const [jobDescription, setJobDescription] = useState('');
     const [uploading, setUploading] = useState(false);
     const [analysis, setAnalysis] = useState(null);
     const [resumes, setResumes] = useState([]);
@@ -37,6 +38,9 @@ const UserDashboard = () => {
 
         const formData = new FormData();
         formData.append('resume', file);
+        if (jobDescription) {
+            formData.append('jobDescription', jobDescription);
+        }
 
         setUploading(true);
         setError('');
@@ -48,6 +52,7 @@ const UserDashboard = () => {
             setAnalysis(res.data.analysis);
             setResumes([res.data.resumeRecord, ...resumes]);
             setFile(null);
+            setJobDescription('');
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to upload and analyze resume.');
         } finally {
@@ -89,6 +94,18 @@ const UserDashboard = () => {
                                         {file ? <span className="font-semibold text-indigo-600">{file.name}</span> : 'Click or drag PDF to upload'}
                                     </p>
                                 </div>
+                            </div>
+                            <div className="mt-4">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Job Description (Optional)
+                                </label>
+                                <textarea
+                                    value={jobDescription}
+                                    onChange={(e) => setJobDescription(e.target.value)}
+                                    placeholder="Paste the job description here to customize the ATS analysis..."
+                                    className="w-full p-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    rows={4}
+                                />
                             </div>
                             <button
                                 type="submit"
