@@ -1,4 +1,4 @@
-# AI Resume Analyzer & Job Matcher <a href="https://ai-resume-analyzer-client.vercel.app/" target="_blank"><img src="https://img.shields.io/badge/Live%20Demo-Deployed-brightgreen?style=for-the-badge&logo=vercel" align="right" alt="Live Demo" /></a>
+# AI Resume Analyzer & Job Matcher <a href="https://ai-resume-analyzer-ten-kappa.vercel.app/" target="_blank"><img src="https://img.shields.io/badge/Live%20Demo-Deployed-brightgreen?style=for-the-badge&logo=vercel" align="right" alt="Live Demo" /></a>
 
 AI Resume Analyzer is a modern full-stack web application designed to help job seekers optimize their resumes for Applicant Tracking Systems (ATS). The application parses PDF resumes, extracts skills, suggests improvements, and scores resumes dynamically. Users can optionally paste a target Job Description to get custom-tailored suggestions and compatibility scoring.
 
